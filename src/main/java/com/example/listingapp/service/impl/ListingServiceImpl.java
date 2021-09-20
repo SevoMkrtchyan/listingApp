@@ -2,7 +2,6 @@ package com.example.listingapp.service.impl;
 
 import com.example.listingapp.entity.Category;
 import com.example.listingapp.entity.Listing;
-import com.example.listingapp.entity.User;
 import com.example.listingapp.repository.ListingRepository;
 import com.example.listingapp.repository.UserRepository;
 import com.example.listingapp.service.CategoryService;
@@ -43,9 +42,9 @@ public class ListingServiceImpl implements ListingService {
 
     @Override
     public boolean deleteListingById(int id) {
-        if (findListingById(id) != null) {
-            List<Listing> listings = listingRepository.findAll();
-            listings.remove(findListingById(id));
+        Optional<Listing> fromDB = listingRepository.findById(id);
+        if (fromDB.isPresent()) {
+            listingRepository.delete(fromDB.get());
             return true;
         }
         return false;
@@ -53,19 +52,15 @@ public class ListingServiceImpl implements ListingService {
 
     @Override
     public Listing updateListing(Listing listing) {
-        if (listing != null) {
-            if (findListingById(listing.getId()) != null) {
-                saveListing(listing);
-                return findListingById(listing.getId());
-            }
+        if (listingRepository.findById(listing.getId()).isPresent()) {
+            return listingRepository.save(listing);
         }
         return null;
     }
 
     @Override
     public List<Listing> findListingByUserEmail(String email) {
-        Optional<User> userFromDB = userRepository.findByEmail(email);
-        if (userFromDB.isPresent()) {
+        if (userRepository.findByEmail(email).isPresent()) {
             return listingRepository.findAllByUserEmail(email);
         }
         return null;
@@ -73,8 +68,7 @@ public class ListingServiceImpl implements ListingService {
 
     @Override
     public List<Listing> findListingByCategoryId(Category category) {
-        Category categoryFromDB = categoryService.findCategoryById(category.getId());
-        if (categoryFromDB != null) {
+        if (categoryService.findCategoryById(category.getId()) != null) {
             return listingRepository.findAllByCategory(category);
         }
         return null;

@@ -1,10 +1,12 @@
 package com.example.listingapp.service.impl;
 
+import com.example.listingapp.dto.UserDto;
 import com.example.listingapp.entity.User;
 import com.example.listingapp.repository.ListingRepository;
 import com.example.listingapp.repository.UserRepository;
 import com.example.listingapp.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -45,7 +47,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean deleteUserById(int id) {
-        if (findUserById(id) != null) {
+        if (userRepository.findById(id).isPresent()) {
             listingRepository.changeListingUserNullWhenUserDeleted(id, null);
             userRepository.deleteById(id);
             return true;

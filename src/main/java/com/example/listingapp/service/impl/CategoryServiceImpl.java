@@ -41,7 +41,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public boolean deleteCategoryById(int id) {
-        if (findCategoryById(id) != null) {
+        if (categoryRepository.findById(id).isPresent()) {
             listingRepository.changeListingCategoryNullWhenCategoryDeleted(id, null);
             categoryRepository.deleteById(id);
             return true;

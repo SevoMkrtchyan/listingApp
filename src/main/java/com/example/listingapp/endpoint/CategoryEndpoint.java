@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -27,7 +26,7 @@ public class CategoryEndpoint {
     @PostMapping()
     public ResponseEntity<Category> saveCategory(@RequestBody Category category) {
         if (categoryService.saveCategory(category)) {
-            log.info("Category with {} name was saved at {}", category.getName(), new Date());
+            log.info("Category with {} name was saved at", category.getName());
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.status(HttpStatus.CONFLICT).build();
@@ -38,7 +37,7 @@ public class CategoryEndpoint {
         if (!categoryService.deleteCategoryById(id)) {
             return ResponseEntity.notFound().build();
         }
-        log.info("Category with {} id was deleted at {}", id, new Date());
+        log.info("Category with {} id was deleted ", id);
         return ResponseEntity.ok().build();
     }
 
@@ -53,15 +52,13 @@ public class CategoryEndpoint {
 
     @PutMapping()
     public ResponseEntity<Category> updateCategory(@RequestBody Category category) {
-        if (category != null) {
-            Category fromDB = getCategoryById(category.getId()).getBody();
-            if (fromDB != null) {
-                if (categoryService.findByName(category.getName()) == null) {
-                    fromDB.setName(category.getName());
-                    categoryService.saveCategory(fromDB);
-                    log.info("Category with {} name was updated at {} ", category.getName(), new Date());
-                    return ResponseEntity.ok().build();
-                }
+        Category fromDB = categoryService.findCategoryById(category.getId());
+        if (fromDB != null) {
+            if (categoryService.findByName(category.getName()) == null) {
+                fromDB.setName(category.getName());
+                categoryService.saveCategory(fromDB);
+                log.info("Changed category by {} id and name {} to {} name", fromDB.getId(), fromDB.getName(), category.getName());
+                return ResponseEntity.ok().build();
             }
         }
         return ResponseEntity.status(HttpStatus.CONFLICT).build();
