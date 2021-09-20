@@ -31,18 +31,24 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category getCategoryById(int id) {
+    public Category findCategoryById(int id) {
         Optional<Category> byId = categoryRepository.findById(id);
         return byId.orElse(null);
     }
 
     @Override
     public boolean deleteCategoryById(int id) {
-        if (getCategoryById(id) != null) {
+        if (findCategoryById(id) != null) {
             categoryRepository.deleteById(id);
             return true;
         }
         return false;
+    }
+
+    @Override
+    public Category findByName(String name) {
+        Optional<Category> byName = categoryRepository.findByName(name);
+        return byName.orElse(null);
     }
 
 }

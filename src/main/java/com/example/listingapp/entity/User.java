@@ -1,5 +1,6 @@
 package com.example.listingapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,8 +23,12 @@ public class User {
     private String name;
     private String surname;
     private String email;
-    private UUID password;
+    private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @JsonIgnore
+    public String getPassword() {
+        return password;
+    }
 }

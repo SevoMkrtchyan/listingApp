@@ -1,7 +1,11 @@
 package com.example.listingapp.service.impl;
 
+import com.example.listingapp.entity.Category;
 import com.example.listingapp.entity.Listing;
+import com.example.listingapp.entity.User;
 import com.example.listingapp.repository.ListingRepository;
+import com.example.listingapp.repository.UserRepository;
+import com.example.listingapp.service.CategoryService;
 import com.example.listingapp.service.ListingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +18,8 @@ import java.util.Optional;
 public class ListingServiceImpl implements ListingService {
 
     private final ListingRepository listingRepository;
+    private final CategoryService categoryService;
+    private final UserRepository userRepository;
 
     @Override
     public List<Listing> findAll() {
@@ -30,19 +36,50 @@ public class ListingServiceImpl implements ListingService {
     }
 
     @Override
-    public Listing getListingById(int id) {
+    public Listing findListingById(int id) {
         Optional<Listing> byId = listingRepository.findById(id);
         return byId.orElse(null);
     }
 
     @Override
     public boolean deleteListingById(int id) {
-        if (getListingById(id) != null) {
+        if (findListingById(id) != null) {
             List<Listing> listings = listingRepository.findAll();
-            listings.remove(getListingById(id));
+            listings.remove(findListingById(id));
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean updateListing(Listing listing) {
+        if (listing != null) {
+            Optional<User> userFromDbByListingUser = userRepository.findById(listing.getId());
+            if (userFromDbByListingUser.isPresent()) {
+                listingRepository.save(listing);
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    @Override
+    public List<Listing> findListingByUserEmail(String email) {
+        Optional<User> userFromDB = userRepository.findByEmail(email);
+        if (userFromDB.isPresent()) {
+            return listingRepository.findAllByUserEmail(email);
+        }
+        return null;
+    }
+
+    @Override
+    public List<Listing> findListingByCategoryId(Category category) {
+        Category categoryFromDB = categoryService.findCategoryById(category.getId());
+        if (categoryFromDB != null) {
+            return listingRepository.findAllByCategory(category);
+        }
+        return null;
     }
 
 }

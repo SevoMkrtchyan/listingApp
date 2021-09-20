@@ -11,8 +11,10 @@ public interface CategoryService {
 
     boolean saveCategory(Category category);
 
-    Category getCategoryById(int id);
+    Category findCategoryById(int id);
 
     boolean deleteCategoryById(int id);
+
+    Category findByName(String name);
 
 }

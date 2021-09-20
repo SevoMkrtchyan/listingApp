@@ -1,7 +1,9 @@
 package com.example.listingapp.service;
 
 
+import com.example.listingapp.entity.Category;
 import com.example.listingapp.entity.Listing;
+import com.example.listingapp.entity.User;
 
 import java.util.List;
 
@@ -12,8 +14,15 @@ public interface ListingService {
 
     boolean saveListing(Listing listing);
 
-    Listing getListingById(int id);
+    Listing findListingById(int id);
+
+    List<Listing> findListingByCategoryId(Category category);
+
+    List<Listing> findListingByUserEmail(String email);
 
     boolean deleteListingById(int id);
+
+    boolean updateListing(Listing listing);
+
 
 }

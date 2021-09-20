@@ -11,8 +11,13 @@ public interface UserService {
 
     boolean saveUser(User user);
 
-    User getUserById(int id);
+    User findUserById(int id);
+
+    User findUserByEmail(String email);
 
     boolean deleteUserById(int id);
+
+    boolean updateUser(User user);
+
 
 }
