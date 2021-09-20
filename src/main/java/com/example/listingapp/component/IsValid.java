@@ -11,7 +11,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Documented
 @Retention(RUNTIME)
-@Target({ FIELD, ANNOTATION_TYPE, TYPE_USE })
+@Target({FIELD, ANNOTATION_TYPE, TYPE_USE})
 @Constraint(validatedBy = EmailValidator.class)
 public @interface IsValid {
     String message() default "{email.invalid}";

@@ -1,6 +1,7 @@
 package com.example.listingapp.service.impl;
 
 import com.example.listingapp.entity.User;
+import com.example.listingapp.repository.ListingRepository;
 import com.example.listingapp.repository.UserRepository;
 import com.example.listingapp.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final ListingRepository listingRepository;
 
     @Override
     public List<User> findAll() {
@@ -44,6 +46,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean deleteUserById(int id) {
         if (findUserById(id) != null) {
+            listingRepository.changeListingUserNullWhenUserDeleted(id, null);
             userRepository.deleteById(id);
             return true;
         }

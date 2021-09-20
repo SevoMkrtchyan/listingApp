@@ -46,7 +46,6 @@ public class ListingEndpoint {
         return ResponseEntity.ok().build();
     }
 
-
     @GetMapping(value = "{id}")
     public ResponseEntity<Listing> getListingById(@PathVariable(name = "id") int id) {
         Listing listing = listingService.findListingById(id);

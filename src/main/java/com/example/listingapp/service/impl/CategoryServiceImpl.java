@@ -2,6 +2,7 @@ package com.example.listingapp.service.impl;
 
 import com.example.listingapp.entity.Category;
 import com.example.listingapp.repository.CategoryRepository;
+import com.example.listingapp.repository.ListingRepository;
 import com.example.listingapp.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,8 @@ import java.util.Optional;
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
+
+    private final ListingRepository listingRepository;
 
     @Override
     public List<Category> findAll() {
@@ -39,6 +42,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public boolean deleteCategoryById(int id) {
         if (findCategoryById(id) != null) {
+            listingRepository.changeListingCategoryNullWhenCategoryDeleted(id, null);
             categoryRepository.deleteById(id);
             return true;
         }
