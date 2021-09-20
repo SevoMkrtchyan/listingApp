@@ -56,6 +56,15 @@ public class ListingEndpoint {
         return ResponseEntity.ok(listing);
     }
 
+    @PutMapping
+    public ResponseEntity<Listing> updateListing(@RequestBody Listing listing) {
+        Listing updatedListing = listingService.updateListing(listing);
+        if (updatedListing != null) {
+            return ResponseEntity.ok(updatedListing);
+        }
+        return ResponseEntity.status(HttpStatus.FAILED_DEPENDENCY).build();
+    }
+
     @GetMapping("/byUser/{email}")
     public ResponseEntity<List<Listing>> getListingsByUserEmail(@PathVariable(name = "email") String email) {
         List<Listing> listingFromDB = listingService.findListingByUserEmail(email);

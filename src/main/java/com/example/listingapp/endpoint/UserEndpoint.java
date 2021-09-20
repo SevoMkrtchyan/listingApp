@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
 
@@ -43,7 +44,7 @@ public class UserEndpoint {
     }
 
     @PostMapping()
-    public ResponseEntity<User> saveUser(@RequestBody User user) {
+    public ResponseEntity<User> saveUser(@RequestBody @Valid User user) {
         if (userService.saveUser(user)) {
             log.info("User with {} email was saved at {} ", user.getEmail(), new Date());
             return ResponseEntity.ok().build();

@@ -22,7 +22,7 @@ public interface ListingService {
 
     boolean deleteListingById(int id);
 
-    boolean updateListing(Listing listing);
+    Listing updateListing(Listing listing);
 
 
 }

@@ -52,16 +52,14 @@ public class ListingServiceImpl implements ListingService {
     }
 
     @Override
-    public boolean updateListing(Listing listing) {
+    public Listing updateListing(Listing listing) {
         if (listing != null) {
-            Optional<User> userFromDbByListingUser = userRepository.findById(listing.getId());
-            if (userFromDbByListingUser.isPresent()) {
-                listingRepository.save(listing);
-                return true;
+            if (findListingById(listing.getId()) != null) {
+                saveListing(listing);
+                return findListingById(listing.getId());
             }
-            return false;
         }
-        return false;
+        return null;
     }
 
     @Override

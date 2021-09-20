@@ -1,5 +1,6 @@
 package com.example.listingapp.entity;
 
+import com.example.listingapp.component.IsValid;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.UUID;
+import javax.validation.constraints.NotBlank;
 
 @Data
 @AllArgsConstructor
@@ -22,6 +23,8 @@ public class User {
     private int id;
     private String name;
     private String surname;
+    @NotBlank
+    @IsValid
     private String email;
     private String password;
     @Enumerated(EnumType.STRING)
