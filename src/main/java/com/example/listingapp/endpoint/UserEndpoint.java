@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/users")
@@ -27,11 +28,8 @@ public class UserEndpoint {
     @GetMapping()
     public List<UserDto> getAllUsers() {
         List<User> users = userService.findAll();
-        List<UserDto> userDtos = new LinkedList<>();
-        for (User user : users) {
-            userDtos.add(modelMapper.map(user, UserDto.class));
-        }
-        return userDtos;
+        return users.stream().map(e ->
+                modelMapper.map(e, UserDto.class)).collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/listings")
@@ -31,11 +32,15 @@ public class ListingEndpoint {
     @GetMapping()
     public List<ListingDto> findAll() {
         List<Listing> listings = listingService.findAll();
-        List<ListingDto> listingDtoList = new LinkedList<>();
-        for (Listing listing : listings) {
-            listingDtoList.add(parseListingToDto(listing));
-        }
-        return listingDtoList;
+        List<ListingDto> listingDtos = listings.stream().map(e -> modelMapper.map(e, ListingDto.class)).collect(Collectors.toList());
+        listingDtos.forEach(e -> {
+            for (Listing listing : listings) {
+                if (listing.getUser() != null) {
+                    e.setUserDto(modelMapper.map(listing.getUser(), UserDto.class));
+                }
+            }
+        });
+        return listingDtos;
     }
 
     @PostMapping()
@@ -81,9 +86,7 @@ public class ListingEndpoint {
         List<Listing> listingFromDB = listingService.findListingByUserEmail(email);
         List<ListingDto> listingDtoList = new LinkedList<>();
         if (listingFromDB != null) {
-            for (Listing listing : listingFromDB) {
-                listingDtoList.add(parseListingToDto(listing));
-            }
+            listingFromDB.forEach(this::parseListingToDto);
             return ResponseEntity.ok(listingDtoList);
         }
         return ResponseEntity.notFound().build();
@@ -95,11 +98,10 @@ public class ListingEndpoint {
             List<Listing> listingsFromDbByCategoryID = listingService.findListingByCategoryId(categoryService.findCategoryById(id));
             List<ListingDto> listingDtoList = new LinkedList<>();
             if (listingsFromDbByCategoryID != null) {
-                for (Listing listing : listingsFromDbByCategoryID) {
-                    listingDtoList.add(parseListingToDto(listing));
-                }
+                listingsFromDbByCategoryID.forEach(this::parseListingToDto);
+                return ResponseEntity.ok(listingDtoList);
             }
-            return ResponseEntity.ok(listingDtoList);
+            return ResponseEntity.notFound().build();
         } catch (NullPointerException e) {
             return ResponseEntity.notFound().build();
         }
