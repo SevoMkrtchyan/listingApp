@@ -35,7 +35,7 @@ public class ListingEndpoint {
         List<ListingDto> listingDtos = listings.stream().map(e -> modelMapper.map(e, ListingDto.class)).collect(Collectors.toList());
         listingDtos.forEach(e -> {
             for (Listing listing : listings) {
-                if (listing.getUser() != null) {
+                if (listing.getUser() != null && listing.getId() == e.getId()) {
                     e.setUserDto(modelMapper.map(listing.getUser(), UserDto.class));
                 }
             }
