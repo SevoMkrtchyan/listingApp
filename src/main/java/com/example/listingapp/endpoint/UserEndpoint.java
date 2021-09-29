@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,6 +27,7 @@ public class UserEndpoint {
     @GetMapping()
     public List<UserDto> getAllUsers() {
         List<User> users = userService.findAll();
+        log.info("Requested to find all users , sending response with users list");
         return users.stream().map(e ->
                 modelMapper.map(e, UserDto.class)).collect(Collectors.toList());
     }
@@ -36,14 +36,17 @@ public class UserEndpoint {
     public ResponseEntity<UserDto> getUserById(@PathVariable(name = "id") int id) {
         User user = userService.findUserById(id);
         if (user == null) {
+            log.info("Requested to find user by id {} which isn't exist", id);
             return ResponseEntity.noContent().build();
         }
+        log.info("Sending response with pared user with id {} to userDto ", id);
         return ResponseEntity.ok(modelMapper.map(user, UserDto.class));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity deleteUserById(@PathVariable(name = "id") int id) {
         if (!userService.deleteUserById(id)) {
+            log.info("Attempt to delete user with id {} which isn't exist", id);
             return ResponseEntity.notFound().build();
         }
         log.info("User with {} id was deleted from Database", id);
@@ -56,6 +59,7 @@ public class UserEndpoint {
             log.info("User with {} email was saved", user.getEmail());
             return ResponseEntity.ok().build();
         }
+        log.info("Attempt to save user failed");
         return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
 
@@ -68,6 +72,7 @@ public class UserEndpoint {
             log.info("User with was updated ");
             return ResponseEntity.ok().build();
         }
+        log.info("Requested to update user with id {} failed", id);
         return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
 

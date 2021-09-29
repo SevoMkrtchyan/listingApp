@@ -29,12 +29,14 @@ public class CategoryEndpoint {
             log.info("Category with {} name was saved at", category.getName());
             return ResponseEntity.ok().build();
         }
+        log.info("Creating category with name {} failed", category.getName());
         return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Category> deleteCategoryById(@PathVariable(name = "id") int id) {
         if (!categoryService.deleteCategoryById(id)) {
+            log.info("Requested to delete category by id {} which does not exist", id);
             return ResponseEntity.notFound().build();
         }
         log.info("Category with {} id was deleted ", id);
@@ -45,8 +47,10 @@ public class CategoryEndpoint {
     public ResponseEntity<Category> getCategoryById(@PathVariable(name = "id") int id) {
         Category category = categoryService.findCategoryById(id);
         if (category == null) {
+            log.info("Requested to get category by id {} which does not exist", id);
             return ResponseEntity.notFound().build();
         }
+        log.info("Request successfully done, sending data to response,requested subject : {}", category);
         return ResponseEntity.ok(category);
     }
 
@@ -60,7 +64,9 @@ public class CategoryEndpoint {
                 log.info("Changed category by {} id and name {} to {} name", fromDB.getId(), fromDB.getName(), category.getName());
                 return ResponseEntity.ok().build();
             }
+            log.info("Request not completed because category with name {} already exist", category.getName());
         }
+        log.info("Request not completed because category with id {} not exist", category.getId());
         return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
 }

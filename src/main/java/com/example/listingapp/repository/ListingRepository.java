@@ -25,5 +25,4 @@ public interface ListingRepository extends JpaRepository<Listing, Integer> {
     @Query(value = "UPDATE listing SET user_id=:nullValue WHERE user_id=:id", nativeQuery = true)
     void changeListingUserNullWhenUserDeleted(@Param("id") Integer id, @Param("nullValue") Integer nullValue);
 
-
 }
