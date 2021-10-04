@@ -60,6 +60,9 @@ public class ListingServiceImpl implements ListingService {
 
     @Override
     public List<Listing> findListingByUserEmail(String email) {
+        if (email == null || email.equals("")) {
+            return null;
+        }
         if (userRepository.findByEmail(email).isPresent()) {
             return listingRepository.findAllByUserEmail(email);
         }

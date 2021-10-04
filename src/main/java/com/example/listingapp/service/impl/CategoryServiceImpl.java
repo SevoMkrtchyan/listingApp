@@ -25,6 +25,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public boolean saveCategory(Category category) {
+        if (category.getName() == null || category.getName().equals("")) {
+            return false;
+        }
         if (!categoryRepository.findByName(category.getName().toUpperCase()).isPresent()) {
             category.setName(category.getName().toUpperCase());
             categoryRepository.save(category);
